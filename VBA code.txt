@@ -1,0 +1,137 @@
+Sub clean_row_zero()
+
+    Dim lRow As Long
+        lRow = Cells(Rows.Count, 1).End(xlUp).Row
+    Dim i As Long
+    
+    For i = lRow To 1 Step -1
+            If Range("C" & i) = 0 Then
+                Rows(i).Delete
+            End If
+    Next i
+    
+
+End Sub
+
+Sub total_volumn()
+
+    Dim lRow As Long
+        lRow = Cells(Rows.Count, 1).End(xlUp).Row
+    Dim i As Long
+    Dim num_ticker As Long
+        num_ticker = 2
+    Dim total As Double
+    
+    Dim stock_close As Double
+    Dim stock_open As Double
+    Dim stock_change As Double
+    Dim single_stock_counter As Integer
+    Dim percent_change As Double
+    
+    
+    For i = 2 To lRow
+        total = total + Range("G" & i)
+        Range("J" & num_ticker) = total
+        stock_change = 0
+        
+        If Cells(i + 1, 1) <> Cells(i, 1) Then
+            Range("I" & num_ticker) = Cells(i, 1)
+            total = 0
+            stock_close = Range("F" & i).Value
+            stock_change = stock_close - stock_open
+            Range("K" & num_ticker) = stock_change
+            percent_change = stock_change / stock_open
+            Range("L" & num_ticker) = percent_change
+            Range("L" & num_ticker).NumberFormat = "0.00%"
+            num_ticker = num_ticker + 1
+            single_stock_counter = 0
+
+        Else
+            stock_open = Range("C" & (i - single_stock_counter))
+            single_stock_counter = single_stock_counter + 1
+        End If
+        
+    Next i
+    
+End Sub
+
+Sub cond_format()
+    Dim lRow As Long
+        lRow = Cells(Rows.Count, 11).End(xlUp).Row
+    Dim i As Long
+    For i = 2 To lRow
+        If Cells(i, 11) > 0 Then
+            Cells(i, 11).Interior.ColorIndex = 4
+        Else
+            Cells(i, 11).Interior.ColorIndex = 3
+        End If
+    Next i
+End Sub
+
+
+Sub find_max()
+    Range("I1") = "Ticker"
+    Range("J1") = "Total Stock Volumn"
+    Range("K1") = "Yearly Change"
+    Range("L1") = "Percent Change"
+    
+    Range("M2") = "Greatest % increase"
+    Range("M3") = "Greatest % Decrease"
+    Range("M4") = "Greatest Total Volume"
+    Range("N1") = "Ticker"
+    Range("O1") = "Value"
+    
+    Dim lRow As Long
+        lRow = Cells(Rows.Count, 11).End(xlUp).Row
+    Dim i As Long
+    Dim j As Long
+    Dim k As Long
+    Dim change_max As Double
+    Dim change_min As Double
+    Dim total_max As Double
+        change_max = Cells(2, 12)
+        change_min = Cells(2, 12)
+        total_max = Cells(2, 10)
+        
+    For i = 2 To lRow - 1
+        If Cells(i + 1, 12) > change_max Then
+            change_max = Cells(i + 1, 12)
+            Range("N2") = Range("I" & i + 1)
+        ElseIf change_min > Cells(i + 1, 12) Then
+            change_min = Cells(i + 1, 12)
+            Range("N3") = Range("I" & i + 1)
+        End If
+    Next i
+    Range("O2") = change_max
+    Range("O3") = change_min
+    Range("O2:O3").NumberFormat = "0.00%"
+    For j = 2 To lRow - 1
+        If Cells(j + 1, 10) > total_max Then
+            total_max = Cells(j + 1, 10)
+            Range("N4") = Range("I" & j + 1)
+        End If
+    Next j
+    Range("O4") = total_max
+    
+
+End Sub
+    
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
